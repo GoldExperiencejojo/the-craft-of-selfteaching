@@ -116,17 +116,21 @@ False
 
 #### range()函数：
 
-> 返回一个range对象
+> 为range对象的一个构造器
 >
 > [`range`](https://docs.python.org/zh-cn/3/library/stdtypes.html#range) 类型表示不可变的数字序列，通常用于在 [`for`](https://docs.python.org/zh-cn/3/reference/compound_stmts.html#for) 循环中循环指定的次数。
 >
+> *class* `range`(*stop*)
+>
 > *class* `range`(*start*, *stop*[, *step*])
 >
-> range 构造器的参数必须为整数（可以是内置的 [`int`](https://docs.python.org/zh-cn/3/library/functions.html#int) 或任何实现了 `__index__` 特殊方法的对象）。 如果省略 *step* 参数，其默认值为 `1`。 如果省略 *start* 参数，其默认值为 `0`。
+> range 构造器的参数必须为整数（可以是内置的 [`int`](https://docs.python.org/zh-cn/3/library/functions.html#int) 或任何实现了 `__index__` 特殊方法(使当前对象可以转换为整数)的对象）。 如果省略 *step* 参数，其默认值为 `1`。 如果省略 *start* 参数，其默认值为 `0`。
 >
 > 如果 *step* 为正值，确定 range `r` 内容的公式为 `r[i] = start + step*i` 其中 `i >= 0` 且 `r[i] < stop`。
 >
 > 如果 *step* 为负值，确定 range 内容的公式仍然为 `r[i] = start + step*i`，但限制条件改为 `i >= 0` 且 `r[i] > stop`.
+>
+> 如果 `r[0]` 不符合值的限制条件，则该 range 对象为空。 range 对象确实支持负索引，但是会将其解读为从正索引所确定的序列的末尾开始索引。
 
 #### 循环中的else语句
 
@@ -223,9 +227,43 @@ False
 
 <img src="../images/python-containers-final.png" style="zoom:150%;" />
 
-### 列表
+### 序列类型
 
-#### 列表的生成
+所谓序列，我理解为有序的表，即可以通过索引来找到元素的位置
+
+> 拼接，切片，索引·······
+
+![](..\my-images\通用序列操作.png)
+
+**可变序列操作**
+
+> 插入，删除，清空，逆序，替换······ 
+
+| 运算                      | 结果：                                                       |
+| :------------------------ | :----------------------------------------------------------- |
+| `s[i] = x`                | 将 *s* 的第 *i* 项替换为 *x*                                 |
+| `s[i:j] = t`              | 将 *s* 从 *i* 到 *j* 的切片替换为可迭代对象 *t* 的内容       |
+| `del s[i:j]`              | 等同于 `s[i:j] = []`                                         |
+| `s[i:j:k] = t`            | 将 `s[i:j:k]` 的元素替换为 *t* 的元素                        |
+| `del s[i:j:k]`            | 从列表中移除 `s[i:j:k]` 的元素                               |
+| `s.append(x)`             | 将 *x* 添加到序列的末尾 (等同于 `s[len(s):len(s)] = [x]`)    |
+| `s.clear()`               | 从 *s* 中移除所有项 (等同于 `del s[:]`)                      |
+| `s.copy()`                | 创建 *s* 的浅拷贝 (等同于 `s[:]`)                            |
+| `s.extend(t)` 或 `s += t` | 用 *t* 的内容扩展 *s* (基本上等同于 `s[len(s):len(s)] = t`)  |
+| `s *= n`                  | 使用 *s* 的内容重复 *n* 次来对其进行更新                     |
+| `s.insert(i, x)`          | 在由 *i* 给出的索引位置将 *x* 插入 *s* (等同于 `s[i:i] = [x]`) |
+| `s.pop([i])`              | 提取在 *i* 位置上的项，并将其从 *s* 中移除                   |
+| `s.remove(x)`             | 删除 *s* 中第一个 `s[i]` 等于 *x* 的项目。                   |
+| `s.reverse()`             | 就地将列表中的元素逆序。                                     |
+
+#### 列表
+
+> 列表为
+>
+> - 序列类型
+> - 可变类型
+
+**列表的生成**
 
 *class* `list`([*iterable*])
 
@@ -291,10 +329,96 @@ False
 
 ![](../images/list-concepts.png)
 
+> 列表出来通用和可变的操作之外，还可以使用排序sort()这个内置函数。
+>
+> ```
+> list.sort()               #正序
+> list.sort(reverse = True) #倒序
+> ```
+
+#### 元组
+
+> 元组是
+>
+> - 序列类型
+> - 不可变序列
+
+**元组的生成**
+
+*class* `tuple`([*iterable*])
+
+可以用多种方式构建元组：
+
+- 使用一对圆括号来表示空元组: `()`
+- 使用一个后缀的逗号来表示单元组: `a,` 或 `(a,)`
+- 使用以逗号分隔的多个项: `a, b, c` or `(a, b, c)`
+- 使用内置的 [`tuple()`](https://docs.python.org/zh-cn/3/library/stdtypes.html#tuple): `tuple()` 或 `tuple(iterable)`
+
+> **请注意决定生成元组的其实是逗号而不是圆括号。 圆括号只是可选的**，生成空元组或需要避免语法歧义的情况除外。 例如，`f(a, b, c)` 是在调用函数时附带三个参数，而 `f((a, b, c))` 则是在调用函数时附带一个三元组。
 
 
-### 元组
 
+#### Range对象
+
+> [`range`](https://docs.python.org/zh-cn/3/library/stdtypes.html#range) 类型表示**不可变**的数字**序列**，通常用于在 [`for`](https://docs.python.org/zh-cn/3/reference/compound_stmts.html#for) 循环中循环指定的次数。
+>
+> range 对象实现了通用序列的所有操作，**但拼接和重复除外**（这是由于 range 对象只能表示符合严格模式的序列，而重复和拼接通常都会违反这样的模式）。
+>
+> [`range`](https://docs.python.org/zh-cn/3/library/stdtypes.html#range) 类型相比常规 [`list`](https://docs.python.org/zh-cn/3/library/stdtypes.html#list) 或 [`tuple`](https://docs.python.org/zh-cn/3/library/stdtypes.html#tuple) 的优势在于一个`range` 对象总是**占用固定数量的（较小）内存，不论其所表示的范围有多大（因为它只保存了 `start`, `stop` 和 `step` 值**，并会根据需要计算具体单项或子范围的值）
+>
+> 使用 `==` 和 `!=` 检测 range 对象是否相等是将其作为序列来比较。 也就是说，**如果两个 range 对象表示相同的值序列就认为它们是相等的**。 （请注意比较结果相等的两个 range 对象可能会具有不同的 [`start`](https://docs.python.org/zh-cn/3/library/stdtypes.html#range.start), [`stop`](https://docs.python.org/zh-cn/3/library/stdtypes.html#range.stop) 和 [`step`](https://docs.python.org/zh-cn/3/library/stdtypes.html#range.step) 属性，例如 `range(0) == range(2, 1, 3)`(该range对象为空) 而 `range(0, 3, 2) == range(0, 4, 2)`。）
+
+
+
+### 集合类型
+
+#### Set，frozenset
+
+> *set* 对象是由具有唯一性的 [hashable](https://docs.python.org/zh-cn/3/glossary.html#term-hashable) 对象所组成的无序多项集。 常见的用途包括成员检测、从序列中去除重复项以及数学中的集合类计算，例如交集、并集、差集与对称差集等等。
+
+> [`set`](https://docs.python.org/zh-cn/3/library/stdtypes.html#set) 类型是**可变**的 --- 其内容可以使用 `add()` 和 `remove()` 这样的方法来改变。 由于是可变类型，它没有哈希值，且不能被用作字典的键或其他集合的元素。 [`frozenset`](https://docs.python.org/zh-cn/3/library/stdtypes.html#frozenset) 类型是**不可变**并且为 [hashable](https://docs.python.org/zh-cn/3/glossary.html#term-hashable) --- 其内容在被创建后不能再改变；因此它可以被用作字典的键或其他集合的元素。
+
+**构造**
+
+*class* `set`([*iterable*])
+
+*class* `frozenset`([*iterable*])
+
+返回一个新的 set 或 frozenset 对象，其元素来自于 *iterable*。 集合的元素必须为 [hashable](https://docs.python.org/zh-cn/3/glossary.html#term-hashable)。 要表示由集合对象构成的集合，所有的内层集合必须为 [`frozenset`](https://docs.python.org/zh-cn/3/library/stdtypes.html#frozenset) 对象。 如果未指定 *iterable*，则将返回一个新的空集合。
+
+除了可以使用 [`set`](https://docs.python.org/zh-cn/3/library/stdtypes.html#set) 构造器，非空的 set (不是 frozenset) 还可以通过将以逗号分隔的元素列表包含于花括号之内来创建，例如: `{'jack', 'sjoerd'}`。
+
+**操作**
+
+> 将序列类型数据转换成 Set，就等于**去重**。当然，也可以用 `in` 来判断某个元素是否属于这个集合。`len()`、`max()`、`min()`，也都可以用来操作 Set，但 `del` 却不行 —— 因为 Set 中的元素没有索引（它不是有序容器）。从 Set 里删除元素，得用 `set.remove(elem)`；而 Frozen Set 是不可变的，所以不能用 `set.remove(elem)` 操作。
+
+![image-20200803160638611](..\my-images\set,frozenset操作.png)
+
+### 映射类型(Map)
+
+ 目前仅有一种标准映射类型 *字典*。
+
+#### 字典(Dictionary)
+
+> 字典的键 *几乎* 可以是任何值。 非 [hashable](https://docs.python.org/zh-cn/3/glossary.html#term-hashable) 的值，即包含列表、字典或其他可变类型的值（此类对象基于值而非对象标识进行比较）不可用作键。 数字类型用作键时遵循数字比较的一般规则：如果两个数值相等 (例如 `1` 和 `1.0`) 则两者可以被用来索引同一字典条目。 （但是请注意，由于计算机对于浮点数存储的只是近似值，因此将其用作字典键是不明智的。）
+
+**构造**
+
+字典可以通过将以逗号分隔的 `键: 值` 对列表包含于花括号之内来创建，例如: `{'jack': 4098, 'sjoerd': 4127}` 或 `{4098: 'jack', 4127: 'sjoerd'}`，也可以通过 [`dict`](https://docs.python.org/zh-cn/3/library/stdtypes.html#dict) 构造器来创建。
+
+*class* `dict`(***kwarg*)
+*class* `dict`(*mapping*, ***kwarg*)
+*class* `dict`(*iterable*, ***kwarg*)
+
+```
+>>> a = dict(one=1, two=2, three=3)
+>>> b = {'one': 1, 'two': 2, 'three': 3}
+>>> c = dict(zip(['one', 'two', 'three'], [1, 2, 3]))
+>>> d = dict([('two', 2), ('one', 1), ('three', 3)])
+>>> e = dict({'three': 3, 'one': 1, 'two': 2})
+>>> a == b == c == d == e
+True
+```
 
 
 
