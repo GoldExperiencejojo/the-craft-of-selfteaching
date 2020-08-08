@@ -1,7 +1,7 @@
 def is_prime(n):
     """
     Return a boolean value based upon
-    whether the argument n is a prime number.
+    whether the argument n is a prime number.1
     """
     if n < 2:
         return False
